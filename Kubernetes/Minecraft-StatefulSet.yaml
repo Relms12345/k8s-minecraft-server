@@ -24,9 +24,8 @@ spec:
         fsGroup: 2000
       containers:
         - name: minecraft-server
-          image:
+          image: relms/minecraft-server:1.0.0
           imagePullPolicy: Always
-          resources:
           env:
             - name: ALLOW_FLIGHT
               value: "false"
