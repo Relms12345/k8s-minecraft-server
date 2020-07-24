@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minecraft-server
+  labels:
+    app: minecraft-server
+  namespace: minecraft
+spec:
+  replicas: 1
+  serviceName: minecraft-svc
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: minecraft-server
+  template:
+    metadata:
+      labels:
+        app: minecraft-server
+      namespace: minecraft
+    spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+        - name: minecraft-server
+          image:
+          imagePullPolicy: Always
+          resources:
+          env:
+            - name: ALLOW_FLIGHT
+              value: "false"
+            - name: ALLOW_NETHER
+              value: "true"
+            - name: BROADCAST_CONSOLE_TO_OPS
+              value: "true"
+            - name: BROADCAST_RCON_TO_OPS
+              value: "true"
+            - name: DIFFICULTY
+              value: "easy"
+            - name: ENABLE_COMMAND_BLOCK
+              value: "true"
+            - name: ENABLE_JMX_MONITORING
+              value: "false"
+            - name: ENABLE_RCON
+              value: "false"
+            - name: SYNC_CHUNK_WRITES
+              value: "true"
+            - name: ENABLE_STATUS
+              value: "true"
+            - name: ENABLE_QUERY
+              value: "false"
+            - name: ENTITY_BROADCAST_RANGE_PERCENTAGE
+              value: "100"
+            - name: FORCE_GAMEMODE
+              value: "true"
+            - name: FUNCTION_PERMISSION_LEVEL
+              value: "2"
+            - name: GAMEMODE
+              value: "survival"
+            - name: GENERATE_STRUCTURES
+              value: "true"
+            - name: GENERATOR_SETTINGS
+              value: ""
+            - name: HARDCORE
+              value: "false"
+            - name: LEVEL_NAME
+              value: "world"
+            - name: LEVEL_SEED
+              value: ""
+            - name: LEVEL_TYPE
+              value: "default"
+            - name: MAX_BUILD_HEIGHT
+              value: "256"
+            - name: MAX_PLAYERS
+              value: "20"
+            - name: MAX_TICK_TIME
+              value: "60000"
+            - name: MAX_WORLD_SIZE
+              value: "29999984"
+            - name: MOTD
+              value: "A Minecraft Server"
+            - name: NETWORK_COMPRESSION_THRESHOLD
+              value: "256"
+            - name: ONLINE_MODE
+              value: "true"
+            - name: OP_PERMISSION_LEVEL
+              value: "4"
+            - name: PLAYER_IDLE_TIMEOUT
+              value: "0"
+            - name: PREVENT_PROXY_CONNECTION
+              value: "false"
+            - name: PVP
+              value: "true"
+            - name: QUERY_PORT
+              value: "25565"
+            - name: RATE_LIMIT
+              value: "0"
+            - name: RCON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: rcon-password
+            - name: RCON_PORT
+              value: "25575"
+            - name: RESOURCE_PACK
+              value: ""
+            - name: RESOURCE_PACK_SHA1
+              value: ""
+            - name: SERVER_IP
+              value: ""
+            - name: SERVER_PORT
+              value: "25565"
+            - name: SNOOPER_ENABLED
+              value: "true"
+            - name: SPAWN_ANIMALS
+              value: "true"
+            - name: SPAWN_MONSTERS
+              value: "true"
+            - name: SPAWN_NPCS
+              value: "true"
+            - name: SPAWN_PROTECTION
+              value: "16"
+            - name: USE_NATIVE_TRANSPORT
+              value: "true"
+            - name: VIEW_DISTANCE
+              value: "10"
+            - name: WHITE_LIST
+              value: "false"
+            - name: ENFORCE_WHITELIST
+              value: "false"
+          ports:
+            - name: minecraft
+              containerPort: 25565
+              protocol: TCP
+            - name: rcon
+              containerPort: 25575
+              protocol: TCP
+          volumeMounts:
+            - name: datadir
+              mountPath: /data
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: minecraft-sc

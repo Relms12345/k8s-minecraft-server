@@ -1,0 +1,12 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: minecraft-sc
+  labels:
+    app: minecraft-sc
+  namespace: minecraft
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+  fstype: ext4
+  replication-type: none
