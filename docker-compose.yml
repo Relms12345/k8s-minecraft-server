@@ -1,6 +1,8 @@
 ﻿version: "3.8"
 services:
   mc-server:
+    depends_on:
+      - waterfall-server
     image: relms/minecraft-server:1.0.0
     container_name: mc-server
     ports:
@@ -8,3 +10,15 @@ services:
     restart: "no"
     volumes:
       - "./mc-server:/usr/src/server"
+    environment:
+      ONLINE_MODE: "false"
+      SERVER_IP: "127.0.0.1"
+  
+  waterfall-server:
+    image: relms/minecraft-server-waterfall:1.0.0
+    container_name: waterfall-server
+    ports:
+      - 25577:25577
+    restart: "no"
+    volumes:
+      - "./waterfall-server:/usr/src/server"

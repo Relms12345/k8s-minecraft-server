@@ -1,0 +1,9 @@
+﻿FROM openjdk:8u262-jdk
+
+COPY ./mc-files/start-waterfall.sh /usr/src/startup/start-waterfall.sh
+COPY ./mc-files/eula.txt /usr/src/prestart/eula.txt
+COPY ./mc-files/waterfall.jar /usr/src/jar/waterfall.jar
+
+WORKDIR /usr/src/server
+
+CMD /usr/src/startup/start-waterfall.sh
